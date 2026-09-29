@@ -50,6 +50,28 @@ function loadPlan(html) {
   status("sync-status", "Private plan loaded · progress saved to Supabase");
 }
 
+async function refreshPasskeyStatus() {
+  const panel = $("passkey-panel");
+  const button = $("register-passkey");
+  panel.hidden = false;
+  if (!window.PublicKeyCredential || !window.isSecureContext) {
+    button.hidden = true;
+    status("passkey-status", "This browser cannot create a passkey. Open the site in Safari or Chrome, or use an email link.");
+    return;
+  }
+  button.hidden = false;
+  const { data, error } = await supabase.auth.passkey.list();
+  if (error) {
+    status("passkey-status", "Could not check passkeys: " + error.message, true);
+    return;
+  }
+  const count = Array.isArray(data) ? data.length : 0;
+  button.textContent = count ? "Add another passkey" : "Set up Face ID / passkey";
+  status("passkey-status", count
+    ? "Passkey ready. Use it next time you sign in. Email links remain available for recovery."
+    : "Finish setup here to make future sign-ins a device prompt instead of an email link.");
+}
+
 async function renderSession(session) {
   const user = session?.user;
   if (user && currentUser?.id === user.id && !workspace.hidden) return;
@@ -72,6 +94,7 @@ async function renderSession(session) {
   $("sign-out").hidden = false;
   $("account-label").textContent = user.email || "Signed in";
   status("sync-status", "Loading private data…");
+  refreshPasskeyStatus().catch((error) => status("passkey-status", error.message, true));
   const [stateResult, planResult] = await Promise.all([
     supabase.from("training_state").select("profile,checks,return_date,strong_summary").eq("user_id", user.id).maybeSingle(),
     supabase.from("private_plan_html").select("html").eq("user_id", user.id).maybeSingle()
@@ -135,32 +158,45 @@ $("open-tools").addEventListener("click", () => {
   $("open-tools").setAttribute("aria-expanded", String(open));
 });
 
-$("sign-in-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  status("auth-status", "Signing in…");
-  const { error } = await supabase.auth.signInWithPassword({
-    email: $("email").value.trim(),
-    password: $("password").value
-  });
-  const message = error?.message === "Invalid login credentials"
-    ? "No account matches those details. If this is your first visit, choose a new password and select Create account."
-    : error?.message || "Signed in. Loading your plan…";
-  status("auth-status", message, Boolean(error));
-});
-
-$("sign-up").addEventListener("click", async () => {
-  const email = $("email").value.trim();
-  const password = $("password").value;
-  if (!email || !password) {
-    status("auth-status", "Enter an email and password first.", true);
+$("passkey-sign-in").addEventListener("click", async () => {
+  if (!window.PublicKeyCredential || !window.isSecureContext) {
+    status("auth-status", "This browser cannot use passkeys. Open the site in Safari or Chrome, or use an email link.", true);
     return;
   }
-  status("auth-status", "Creating account…");
-  const { error } = await supabase.auth.signUp({
-    email, password,
-    options: { emailRedirectTo: location.origin + location.pathname }
+  status("auth-status", "Waiting for your device’s passkey prompt…");
+  try {
+    const { error } = await supabase.auth.signInWithPasskey();
+    status("auth-status", error ? error.message : "Signed in. Loading your plan…", Boolean(error));
+  } catch (error) {
+    status("auth-status", error.message, true);
+  }
+});
+
+$("email-link-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const email = $("email").value.trim();
+  if (!email) return;
+  status("auth-status", "Sending a one-time link…");
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: location.origin + location.pathname, shouldCreateUser: true }
   });
-  status("auth-status", error ? error.message : "Check your email to confirm the account, then sign in.", Boolean(error));
+  status("auth-status", error ? error.message : "Check your email and open the link on this device. Then add a passkey here.", Boolean(error));
+});
+
+$("register-passkey").addEventListener("click", async () => {
+  if (!currentUser) return;
+  status("passkey-status", "Waiting for your device’s passkey prompt…");
+  try {
+    const { error } = await supabase.auth.registerPasskey();
+    if (error) {
+      status("passkey-status", error.message, true);
+      return;
+    }
+    await refreshPasskeyStatus();
+  } catch (error) {
+    status("passkey-status", error.message, true);
+  }
 });
 
 $("sign-out").addEventListener("click", async () => {
@@ -265,7 +301,7 @@ if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(SUPABASE_URL) ||
   try {
     const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/+esm");
     supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, experimental: { passkey: true } }
     });
     supabase.auth.onAuthStateChange((_event, session) => {
       setTimeout(() => renderSession(session).catch((error) => status("sync-status", error.message, true)), 0);

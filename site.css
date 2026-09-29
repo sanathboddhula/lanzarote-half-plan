@@ -20,8 +20,15 @@ form label{display:grid;gap:7px;color:var(--text);font-size:13px;font-weight:700
 form input{width:100%;padding:13px 14px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
 .button-row{display:flex;flex-wrap:wrap;gap:10px}
 .primary{border-color:var(--signal);background:var(--signal);color:var(--bg)}
+.passkey-button{width:100%;padding:16px;margin-top:16px;font-size:16px}
+.auth-divider{margin:26px 0 0;padding-top:21px;border-top:1px solid var(--line);color:var(--signal);font-size:11px;font-weight:850;letter-spacing:.15em}
+.auth-divider+p{margin-bottom:0}
 .status{min-height:1.5em;font-size:13px;color:var(--sea)}
 .status.error{color:#ffc39a}
+.passkey-panel{padding:15px clamp(18px,3vw,38px);display:flex;align-items:center;justify-content:space-between;gap:18px;background:#2b3226;border-bottom:1px solid var(--signal)}
+.passkey-panel div{display:grid;gap:5px}
+.passkey-panel strong{font-size:12px;letter-spacing:.12em;color:var(--signal)}
+.passkey-panel span{font-size:13px;color:var(--text)}
 .workspace-bar{min-height:58px;padding:10px clamp(18px,3vw,38px);display:flex;align-items:center;justify-content:space-between;gap:15px;background:var(--panel);border-bottom:1px solid var(--line)}
 .workspace-bar div{display:grid;gap:4px}
 .workspace-bar strong{font-size:12px;letter-spacing:.12em}
@@ -38,4 +45,4 @@ form input{width:100%;padding:13px 14px;border:1px solid var(--line);background:
 .tools>.status{grid-column:1/-1}
 #plan-frame{display:block;width:100%;height:calc(100dvh - 122px);border:0;background:var(--bg)}
 [hidden]{display:none!important}
-@media(max-width:680px){.tools{grid-template-columns:1fr}.topbar{align-items:flex-start}.top-actions #account-label{display:none}#plan-frame{height:calc(100dvh - 125px)}}
+@media(max-width:680px){.tools{grid-template-columns:1fr}.topbar{align-items:flex-start}.top-actions #account-label{display:none}.passkey-panel{align-items:stretch;flex-direction:column}.passkey-panel button{width:100%}#plan-frame{height:calc(100dvh - 125px)}}

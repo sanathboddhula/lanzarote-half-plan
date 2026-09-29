@@ -20,17 +20,22 @@
     </section>
     <section id="auth-panel" class="panel auth" hidden>
       <p class="eyebrow">PRIVATE ACCESS</p>
-      <h1>Your plan.<br><em>Your data.</em></h1>
-      <p>Sign in to load your training plan and progress from Supabase. The public GitHub site contains only this sign-in screen.</p>
-      <p>First visit? Enter your email, choose a new password for this site, then select <strong>Create account</strong>. Your Mac, GitHub, and Supabase dashboard passwords are separate.</p>
-      <form id="sign-in-form">
+      <h1>Your plan.<br><em>One touch.</em></h1>
+      <p>Use a passkey to unlock your private training plan. Your device may ask for Face ID, Touch ID, a PIN, or a security key.</p>
+      <button type="button" id="passkey-sign-in" class="primary passkey-button">Continue with Face ID / passkey</button>
+      <div class="auth-divider">FIRST TIME OR NEW DEVICE?</div>
+      <p>Get a one-time email link. Once you open it, add a passkey for future visits. No site password is needed.</p>
+      <form id="email-link-form">
         <label>Email<input id="email" type="email" autocomplete="email" required></label>
-        <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
-        <div class="button-row"><button type="submit" class="primary">Sign in</button><button type="button" id="sign-up">Create account</button></div>
+        <button type="submit">Email me a sign-in link</button>
       </form>
       <p id="auth-status" class="status" role="status"></p>
     </section>
     <section id="workspace" hidden>
+      <div id="passkey-panel" class="passkey-panel" hidden>
+        <div><strong>QUICK SIGN-IN</strong><span id="passkey-status" role="status">Checking passkeys…</span></div>
+        <button type="button" id="register-passkey" class="primary">Set up Face ID / passkey</button>
+      </div>
       <div class="workspace-bar">
         <div><strong>PRIVATE TRAINING PLAN</strong><span id="sync-status" role="status">Loading…</span></div>
         <button type="button" id="open-tools" aria-expanded="false" aria-controls="tools-panel">Data & setup</button>
