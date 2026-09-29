@@ -179,7 +179,7 @@ $("email-link-form").addEventListener("submit", async (event) => {
   status("auth-status", "Sending a one-time link…");
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: location.origin + location.pathname, shouldCreateUser: true }
+    options: { emailRedirectTo: location.origin + location.pathname, shouldCreateUser: false }
   });
   status("auth-status", error ? error.message : "Check your email and open the link on this device. Then add a passkey here.", Boolean(error));
 });
