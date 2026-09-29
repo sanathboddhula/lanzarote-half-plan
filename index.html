@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Private Training Plan</title>
+  <link rel="stylesheet" href="./site.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">13.1</span><span>TRAINING COMMAND</span></div>
+    <div class="top-actions"><span id="account-label"></span><button type="button" id="sign-out" hidden>Sign out</button></div>
+  </header>
+  <main>
+    <section id="connection-panel" class="panel" hidden>
+      <p class="eyebrow">SETUP REQUIRED</p>
+      <h1>Connect the private store.</h1>
+      <p>This public site has no personal training data. Add your Supabase project URL and publishable key to <code>config.js</code> to enable sign-in.</p>
+    </section>
+    <section id="auth-panel" class="panel auth" hidden>
+      <p class="eyebrow">PRIVATE ACCESS</p>
+      <h1>Your plan.<br><em>Your data.</em></h1>
+      <p>Sign in to load your training plan and progress from Supabase. The public GitHub site contains only this sign-in screen.</p>
+      <form id="sign-in-form">
+        <label>Email<input id="email" type="email" autocomplete="email" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+        <div class="button-row"><button type="submit" class="primary">Sign in</button><button type="button" id="sign-up">Create account</button></div>
+      </form>
+      <p id="auth-status" class="status" role="status"></p>
+    </section>
+    <section id="workspace" hidden>
+      <div class="workspace-bar">
+        <div><strong>PRIVATE TRAINING PLAN</strong><span id="sync-status" role="status">Loading…</span></div>
+        <button type="button" id="open-tools" aria-expanded="false" aria-controls="tools-panel">Data & setup</button>
+      </div>
+      <div id="tools-panel" class="tools" hidden>
+        <div class="tool">
+          <h2>Load or update the plan</h2>
+          <p>Select the latest <code>marathon-muscle-plan.html</code> from your computer. It is saved to your private Supabase row; it is never committed to GitHub.</p>
+          <label class="file-label">Plan HTML<input id="plan-file" type="file" accept=".html,text/html"></label>
+        </div>
+        <div class="tool">
+          <h2>Move your saved progress</h2>
+          <p>In the old local page, use “Export progress for hosting” under Your profile. Import that JSON here once.</p>
+          <label class="file-label">Progress JSON<input id="progress-file" type="file" accept=".json,application/json"></label>
+          <button type="button" id="export-cloud">Download cloud backup</button>
+        </div>
+        <div class="tool">
+          <h2>Back up workout exports</h2>
+          <p>Save your original Strong or Strava CSV to private Supabase Storage. This preserves the source file; the plan’s importers still calculate summaries in your browser.</p>
+          <label class="file-label">Source<select id="backup-source"><option value="strong">Strong</option><option value="strava">Strava</option></select></label>
+          <label class="file-label">CSV export<input id="backup-file" type="file" accept=".csv,text/csv"></label>
+        </div>
+        <p id="tool-status" class="status" role="status"></p>
+      </div>
+      <div id="empty-plan" class="panel empty" hidden>
+        <p class="eyebrow">ONE-TIME SETUP</p>
+        <h1>Add your private plan.</h1>
+        <p>Open <strong>Data & setup</strong> above and select your current plan HTML file. After it uploads, this page will load your full dashboard.</p>
+      </div>
+      <iframe id="plan-frame" title="Private training plan" hidden></iframe>
+    </section>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
