@@ -142,7 +142,10 @@ $("sign-in-form").addEventListener("submit", async (event) => {
     email: $("email").value.trim(),
     password: $("password").value
   });
-  status("auth-status", error ? error.message : "Signed in. Loading your plan…", Boolean(error));
+  const message = error?.message === "Invalid login credentials"
+    ? "No account matches those details. If this is your first visit, choose a new password and select Create account."
+    : error?.message || "Signed in. Loading your plan…";
+  status("auth-status", message, Boolean(error));
 });
 
 $("sign-up").addEventListener("click", async () => {
