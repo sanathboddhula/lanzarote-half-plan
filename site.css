@@ -62,7 +62,14 @@ form input{width:100%;padding:13px 16px;border:1px solid var(--line);border-radi
 .tools .tool>button{margin-top:12px;padding:8px 14px;font-size:12px;font-weight:500;background:none}
 .tools>.status{grid-column:1/-1;margin:0 10px}
 .tools>.status:empty{display:none}
+/* Signed in: the plan owns the page; controls float as a small pill, Settings opens above it */
+.signed-in .topbar{position:fixed;right:16px;bottom:16px;z-index:20;min-height:0;padding:6px 16px;border:1px solid var(--line);border-radius:999px;background:rgba(11,21,17,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.signed-in .topbar::before,.signed-in .brand{display:none}
+.signed-in .top-actions{gap:12px}
+.signed-in #plan-frame{height:100dvh}
+.signed-in .tools{position:fixed;right:16px;bottom:68px;z-index:20;margin:0;max-height:calc(100dvh - 92px);overflow:auto;background:rgba(16,26,22,.97);box-shadow:0 22px 70px rgba(0,0,0,.45)}
+.signed-in .empty{margin-top:clamp(40px,14vh,140px)}
 @keyframes settle{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.tools{animation:none}button{transition:none}}
 
-@media(max-width:680px){.tools{grid-template-columns:1fr}.brand{letter-spacing:.16em}#sync-status{display:none}.passkey-panel{align-items:flex-start;flex-direction:column}}
+@media(max-width:680px){.tools{grid-template-columns:1fr}.brand{letter-spacing:.16em}.signed-in #sync-status{display:none}.passkey-panel{align-items:flex-start;flex-direction:column}}
