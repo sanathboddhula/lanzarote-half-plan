@@ -66,14 +66,12 @@ async function refreshPasskeyStatus() {
     return;
   }
   const count = Array.isArray(data) ? data.length : 0;
-  // Once a passkey exists, tuck the prompt into Settings instead of a banner.
-  panel.classList.toggle("tucked", count > 0);
-  if (count > 0) $("tools-panel").prepend(panel);
-  else $("workspace").prepend(panel);
-  button.textContent = count ? "Add another passkey" : "Set up Face ID / passkey";
+  // Setup lives in Settings; a dot on the Settings button nudges until a passkey exists.
+  $("open-tools").classList.toggle("needs-setup", count === 0);
+  button.textContent = count ? "Add another" : "Set up";
   status("passkey-status", count
-    ? "Passkey ready. Use it next time you sign in. Email links remain available for recovery."
-    : "Finish setup here to make future sign-ins a device prompt instead of an email link.");
+    ? "Passkey ready. Email links still work for recovery."
+    : "Sign in with Face ID next time instead of an email link.");
 }
 
 async function renderSession(session) {

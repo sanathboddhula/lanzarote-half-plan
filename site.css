@@ -46,13 +46,12 @@ form input{width:100%;padding:13px 16px;border:1px solid var(--line);border-radi
 #sync-status.error{color:#f0c9a4;opacity:1}
 #sync-status.error::before{background:#f0c9a4}
 
-.passkey-panel{margin:16px auto 0;width:min(720px,calc(100% - 32px));padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #415f48;border-left:3px solid var(--sea);border-radius:12px;background:#1c3023}
-.passkey-panel div{display:grid;gap:3px}
-.passkey-panel strong{font-size:11px;font-weight:650;letter-spacing:.14em;color:var(--sea)}
-.passkey-panel span{font-size:13px;color:#d7e8d8}
-.passkey-panel button{padding:9px 16px;font-size:12px}
-.passkey-panel.tucked{margin:0;width:auto;grid-column:1/-1}
-.passkey-panel.tucked button{background:none;color:var(--text);border-color:var(--line)}
+.passkey-panel{grid-column:1/-1;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-radius:12px;background:var(--panel)}
+.passkey-panel div{display:grid;gap:2px}
+.passkey-panel strong{font:600 17px/1.25 var(--font);letter-spacing:-.03em}
+.passkey-panel span{font-size:12px;color:var(--muted)}
+.passkey-panel button{padding:8px 16px;font-size:12px;font-weight:500;background:none;white-space:nowrap}
+.needs-setup::after{content:"";display:inline-block;width:6px;height:6px;margin-left:6px;border-radius:50%;background:var(--signal);vertical-align:2px}
 
 .tools{width:min(980px,calc(100% - 32px));margin:16px auto;padding:8px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border:1px solid var(--line);border-radius:18px;background:rgba(25,39,32,.85);animation:settle .25s ease-out}
 .tool{padding:18px;border-radius:12px;background:var(--panel)}
@@ -66,4 +65,4 @@ form input{width:100%;padding:13px 16px;border:1px solid var(--line);border-radi
 @keyframes settle{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.tools{animation:none}button{transition:none}}
 
-@media(max-width:680px){.tools{grid-template-columns:1fr}.brand{letter-spacing:.16em}#sync-status{display:none}.passkey-panel{align-items:stretch;flex-direction:column}.passkey-panel button{width:100%}}
+@media(max-width:680px){.tools{grid-template-columns:1fr}.brand{letter-spacing:.16em}#sync-status{display:none}.passkey-panel{align-items:flex-start;flex-direction:column}}
