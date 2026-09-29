@@ -90,12 +90,14 @@ async function renderSession(session) {
     $("open-tools").hidden = true;
     $("tools-panel").hidden = true;
     status("sync-status", "");
+    document.body.classList.remove("signed-in");
     $("account-label").textContent = "";
     return;
   }
   currentUser = user;
   authPanel.hidden = true;
   workspace.hidden = false;
+  document.body.classList.add("signed-in");
   $("sign-out").hidden = false;
   $("open-tools").hidden = false;
   $("account-label").textContent = user.email || "Signed in";
@@ -158,10 +160,14 @@ window.addEventListener("message", (event) => {
   saveState(event.data.state).catch((error) => status("tool-status", error.message, true));
 });
 
-$("open-tools").addEventListener("click", () => {
-  const open = $("tools-panel").hidden;
+function setToolsOpen(open) {
   $("tools-panel").hidden = !open;
   $("open-tools").setAttribute("aria-expanded", String(open));
+}
+
+$("open-tools").addEventListener("click", () => setToolsOpen($("tools-panel").hidden));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !$("tools-panel").hidden) setToolsOpen(false);
 });
 
 $("passkey-sign-in").addEventListener("click", async () => {
