@@ -47,7 +47,7 @@ function loadPlan(html) {
   frame.srcdoc = html;
   frame.hidden = false;
   $("empty-plan").hidden = true;
-  status("sync-status", "Private plan loaded · progress saved to Supabase");
+  status("sync-status", "Synced");
 }
 
 async function refreshPasskeyStatus() {
@@ -66,6 +66,10 @@ async function refreshPasskeyStatus() {
     return;
   }
   const count = Array.isArray(data) ? data.length : 0;
+  // Once a passkey exists, tuck the prompt into Settings instead of a banner.
+  panel.classList.toggle("tucked", count > 0);
+  if (count > 0) $("tools-panel").prepend(panel);
+  else $("workspace").prepend(panel);
   button.textContent = count ? "Add another passkey" : "Set up Face ID / passkey";
   status("passkey-status", count
     ? "Passkey ready. Use it next time you sign in. Email links remain available for recovery."
@@ -85,6 +89,9 @@ async function renderSession(session) {
     workspace.hidden = true;
     authPanel.hidden = false;
     $("sign-out").hidden = true;
+    $("open-tools").hidden = true;
+    $("tools-panel").hidden = true;
+    status("sync-status", "");
     $("account-label").textContent = "";
     return;
   }
@@ -92,6 +99,7 @@ async function renderSession(session) {
   authPanel.hidden = true;
   workspace.hidden = false;
   $("sign-out").hidden = false;
+  $("open-tools").hidden = false;
   $("account-label").textContent = user.email || "Signed in";
   status("sync-status", "Loading private data…");
   refreshPasskeyStatus().catch((error) => status("passkey-status", error.message, true));

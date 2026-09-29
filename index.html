@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <title>Private Training Plan</title>
-  <link rel="stylesheet" href="./site.css?v=passkey-1">
+  <link rel="stylesheet" href="./site.css?v=soft-1">
 </head>
 <body>
   <header class="topbar">
     <div class="brand"><span class="brand-mark">13.1</span><span>TRAINING COMMAND</span></div>
-    <div class="top-actions"><span id="account-label"></span><button type="button" id="sign-out" hidden>Sign out</button></div>
+    <div class="top-actions"><span id="account-label" hidden></span><span id="sync-status" role="status"></span><button type="button" id="open-tools" class="quiet" aria-expanded="false" aria-controls="tools-panel" hidden>Settings</button><button type="button" id="sign-out" class="quiet" hidden>Sign out</button></div>
   </header>
   <main>
     <section id="connection-panel" class="panel" hidden>
@@ -35,10 +35,6 @@
       <div id="passkey-panel" class="passkey-panel" hidden>
         <div><strong>QUICK SIGN-IN</strong><span id="passkey-status" role="status">Checking passkeys…</span></div>
         <button type="button" id="register-passkey" class="primary">Set up Face ID / passkey</button>
-      </div>
-      <div class="workspace-bar">
-        <div><strong>PRIVATE TRAINING PLAN</strong><span id="sync-status" role="status">Loading…</span></div>
-        <button type="button" id="open-tools" aria-expanded="false" aria-controls="tools-panel">Data & setup</button>
       </div>
       <div id="tools-panel" class="tools" hidden>
         <div class="tool">
@@ -68,6 +64,6 @@
       <iframe id="plan-frame" title="Private training plan" hidden></iframe>
     </section>
   </main>
-  <script type="module" src="./app.js?v=passkey-1"></script>
+  <script type="module" src="./app.js?v=soft-1"></script>
 </body>
 </html>
