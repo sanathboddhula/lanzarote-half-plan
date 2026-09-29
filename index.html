@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <title>Steady Strong</title>
-  <link rel="stylesheet" href="./site.css?v=zen-1">
+  <link rel="stylesheet" href="./site.css?v=zen-2">
 </head>
 <body>
   <header class="topbar">
@@ -32,11 +32,11 @@
       <p id="auth-status" class="status" role="status"></p>
     </section>
     <section id="workspace" hidden>
-      <div id="passkey-panel" class="passkey-panel" hidden>
-        <div><strong>QUICK SIGN-IN</strong><span id="passkey-status" role="status">Checking passkeys…</span></div>
-        <button type="button" id="register-passkey" class="primary">Set up Face ID / passkey</button>
-      </div>
       <div id="tools-panel" class="tools" hidden>
+        <div id="passkey-panel" class="passkey-panel" hidden>
+          <div><strong>Face ID / passkey</strong><span id="passkey-status" role="status">Checking passkeys…</span></div>
+          <button type="button" id="register-passkey">Set up</button>
+        </div>
         <div class="tool">
           <h2>Load or update the plan</h2>
           <p>Select the latest <code>marathon-muscle-plan.html</code> from your computer. It is saved to your private Supabase row; it is never committed to GitHub.</p>
@@ -64,6 +64,6 @@
       <iframe id="plan-frame" title="Private training plan" hidden></iframe>
     </section>
   </main>
-  <script type="module" src="./app.js?v=zen-1"></script>
+  <script type="module" src="./app.js?v=zen-2"></script>
 </body>
 </html>
