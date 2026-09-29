@@ -1,62 +1,69 @@
-:root{color-scheme:dark;--bg:#141a18;--panel:#202923;--raised:#28342c;--line:#45534a;--text:#f2f0e8;--muted:#b7c1b9;--signal:#e9b253;--sea:#93c4b5}
+/* Steady Strong — matches the zen plan: moss greens, sage accents, soft gold, Avenir, rounded calm surfaces. */
+:root{color-scheme:dark;--bg:#101a16;--deep:#0b1511;--panel:#192720;--raised:#223329;--line:#35483b;--text:#f5f4e9;--muted:#b7c8b8;--sea:#b1dac0;--signal:#e5d19a;--font:"Avenir Next",Avenir,"Helvetica Neue",Arial,sans-serif}
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
-button,input{font:inherit}
-button{cursor:pointer;border:1px solid var(--line);background:var(--raised);color:var(--text);padding:10px 15px;font-weight:750}
-button:hover{border-color:var(--signal)}
-button:focus-visible,input:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
-.topbar{min-height:63px;padding:12px clamp(18px,3vw,38px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:14px}
-.brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.08em;font-size:13px}
-.brand-mark{display:inline-block;padding:6px 8px;background:var(--signal);color:var(--bg);font-size:17px;letter-spacing:0}
-.top-actions{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px}
-.top-actions button{padding:7px 10px;font-size:12px}
-.panel{width:min(550px,calc(100% - 36px));margin:clamp(38px,10vh,110px) auto;padding:clamp(26px,5vw,42px);background:var(--panel);border-top:5px solid var(--signal)}
-.panel h1{font-family:Impact,"Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.01em;font-size:clamp(42px,7vw,66px);line-height:.94;margin:8px 0 19px}
-.panel h1 em{color:var(--signal);font-style:normal}
-.panel p{line-height:1.55;color:var(--muted)}
-.eyebrow{color:var(--signal)!important;font-size:12px;font-weight:850;letter-spacing:.16em}
-form{display:grid;gap:17px;margin-top:28px}
-form label{display:grid;gap:7px;color:var(--text);font-size:13px;font-weight:700}
-form input{width:100%;padding:13px 14px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
-.button-row{display:flex;flex-wrap:wrap;gap:10px}
-.primary{border-color:var(--signal);background:var(--signal);color:var(--bg)}
-.passkey-button{width:100%;padding:16px;margin-top:16px;font-size:16px}
-.auth-divider{margin:26px 0 0;padding-top:21px;border-top:1px solid var(--line);color:var(--signal);font-size:11px;font-weight:850;letter-spacing:.15em}
+html,body{margin:0;min-height:100%}
+body{font:16px/1.6 var(--font);color:var(--text);background:radial-gradient(ellipse 80% 28% at 50% 6%,#1a3125 0%,transparent 70%),var(--bg);-webkit-font-smoothing:antialiased}
+::selection{background:var(--sea);color:var(--deep)}
+button,input,select{font:inherit;accent-color:var(--sea)}
+button{cursor:pointer;border:1px solid var(--line);border-radius:999px;background:var(--raised);color:var(--text);padding:11px 18px;font-weight:600;transition:border-color .2s,background .2s,color .2s}
+button:hover{border-color:var(--sea)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
+code{color:var(--sea);word-break:break-word}
+
+/* Header: deep radial glow with concentric rings */
+.topbar{position:relative;isolation:isolate;overflow:hidden;min-height:72px;padding:14px clamp(18px,3vw,38px);display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid rgba(221,232,211,.16);background:radial-gradient(circle at 80% 40%,#263f2d 0,#13231a 35%,var(--deep) 75%)}
+.topbar::before{content:"";position:absolute;width:800px;height:800px;right:-225px;top:-355px;z-index:-1;border:1px solid rgba(209,230,194,.12);border-radius:50%;box-shadow:0 0 0 95px rgba(209,230,194,.025),0 0 0 190px rgba(209,230,194,.018),0 0 0 285px rgba(209,230,194,.012);pointer-events:none}
+.brand{font-size:13px;font-weight:650;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap}
+.brand::before{content:"●";margin-right:12px;color:var(--sea);font-size:12px;vertical-align:1px}
+.top-actions{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:12px}
+
+/* Sign-in and setup cards */
+.panel{width:min(560px,calc(100% - 32px));margin:clamp(40px,10vh,110px) auto;padding:clamp(26px,5vw,42px);border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 22px 70px rgba(0,0,0,.2)}
+.panel h1{margin:10px 0 20px;font:550 clamp(44px,7vw,68px)/1.02 var(--font);letter-spacing:-.065em}
+.panel h1 em{color:var(--sea);font-style:normal}
+.panel p{color:#d5dfd0;line-height:1.7}
+.eyebrow{margin:0;color:var(--sea)!important;font-size:12px;font-weight:650;letter-spacing:.22em;text-transform:uppercase}
+form{display:grid;gap:16px;margin-top:26px}
+form label{display:grid;gap:7px;color:var(--text);font-size:13px;font-weight:600}
+form input{width:100%;padding:13px 16px;border:1px solid var(--line);border-radius:12px;background:var(--deep);color:var(--text)}
+.primary{border-color:var(--sea);background:var(--sea);color:var(--deep)}
+.primary:hover{background:#c6e6d1;border-color:#c6e6d1}
+.passkey-button{width:100%;padding:16px;margin-top:18px;font-size:16px}
+.auth-divider{margin:28px 0 0;padding-top:22px;border-top:1px solid var(--line);color:var(--signal);font-size:11px;font-weight:650;letter-spacing:.2em;text-transform:uppercase}
 .auth-divider+p{margin-bottom:0}
 .status{min-height:1.5em;font-size:13px;color:var(--sea)}
-.status.error{color:#ffc39a}
-.file-label{display:grid;gap:9px;margin:18px 0;font-size:13px;font-weight:750}
-.file-label input{width:100%;max-width:100%;padding:11px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
-.file-label select{padding:11px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
-#plan-frame{display:block;width:100%;height:calc(100dvh - 64px);border:0;background:var(--bg)}
+.status.error{color:#f0c9a4}
+.file-label{display:grid;gap:9px;margin:18px 0;font-size:13px;font-weight:600}
+.file-label input,.file-label select{width:100%;max-width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--deep);color:var(--text)}
+#plan-frame{display:block;width:100%;height:calc(100dvh - 73px);border:0;background:var(--bg)}
 [hidden]{display:none!important}
 
 /* Signed-in chrome: quiet, out of the way */
-.quiet{border:0;background:none;padding:6px 4px;color:var(--muted);font-weight:500;font-size:12px;opacity:.75;transition:opacity .2s,color .2s}
-.quiet:hover,.quiet[aria-expanded="true"]{opacity:1;color:var(--text);border:0}
-#sync-status{font-size:11px;color:var(--muted);opacity:.6}
-#sync-status:not(:empty)::before{content:"";display:inline-block;width:6px;height:6px;margin-right:6px;border-radius:50%;background:var(--sea);vertical-align:1px}
-#sync-status.error{color:#ffc39a;opacity:1}
-#sync-status.error::before{background:#ffc39a}
+.quiet{border:0;border-radius:6px;background:none;padding:6px 4px;color:var(--muted);font-weight:500;font-size:13px;letter-spacing:.02em;opacity:.8}
+.quiet:hover,.quiet[aria-expanded="true"]{opacity:1;color:var(--sea);border:0}
+#sync-status{font-size:11px;color:var(--muted);opacity:.7}
+#sync-status:not(:empty)::before{content:"";display:inline-block;width:6px;height:6px;margin-right:7px;border-radius:50%;background:var(--sea);vertical-align:1px}
+#sync-status.error{color:#f0c9a4;opacity:1}
+#sync-status.error::before{background:#f0c9a4}
 
-.passkey-panel{margin:14px auto 0;width:min(720px,calc(100% - 36px));padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px}
+.passkey-panel{margin:16px auto 0;width:min(720px,calc(100% - 32px));padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #415f48;border-left:3px solid var(--sea);border-radius:12px;background:#1c3023}
 .passkey-panel div{display:grid;gap:3px}
-.passkey-panel strong{font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--muted)}
-.passkey-panel span{font-size:13px;color:var(--muted)}
-.passkey-panel button{padding:8px 12px;font-size:12px;font-weight:600;border-radius:8px}
+.passkey-panel strong{font-size:11px;font-weight:650;letter-spacing:.14em;color:var(--sea)}
+.passkey-panel span{font-size:13px;color:#d7e8d8}
+.passkey-panel button{padding:9px 16px;font-size:12px}
 .passkey-panel.tucked{margin:0;width:auto;grid-column:1/-1}
-.passkey-panel.tucked button{background:none;color:var(--text);border-color:rgba(255,255,255,.12)}
+.passkey-panel.tucked button{background:none;color:var(--text);border-color:var(--line)}
 
-.tools{width:min(960px,calc(100% - 36px));margin:14px auto;padding:6px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:14px;animation:settle .25s ease-out}
-.tool{padding:16px;border-radius:10px}
-.tool h2{margin:0 0 6px;font-size:13px;font-weight:600;color:var(--text)}
-.tool p{margin:0;color:var(--muted);font-size:12px;line-height:1.5;opacity:.8}
+.tools{width:min(980px,calc(100% - 32px));margin:16px auto;padding:8px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border:1px solid var(--line);border-radius:18px;background:rgba(25,39,32,.85);animation:settle .25s ease-out}
+.tool{padding:18px;border-radius:12px;background:var(--panel)}
+.tool h2{margin:0 0 6px;font:600 17px/1.25 var(--font);letter-spacing:-.03em;color:var(--text)}
+.tool p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
 .tools .file-label{margin:12px 0 0;gap:6px;font-size:11px;font-weight:500;color:var(--muted)}
-.tools .file-label input,.tools .file-label select{padding:8px;font-size:12px;border-color:rgba(255,255,255,.08);border-radius:8px}
-.tools .tool>button{margin-top:10px;padding:7px 10px;font-size:12px;font-weight:500;background:none;border-color:rgba(255,255,255,.1);border-radius:8px}
+.tools .file-label input,.tools .file-label select{padding:8px;font-size:12px}
+.tools .tool>button{margin-top:12px;padding:8px 14px;font-size:12px;font-weight:500;background:none}
 .tools>.status{grid-column:1/-1;margin:0 10px}
 .tools>.status:empty{display:none}
 @keyframes settle{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.tools{animation:none}}
+@media(prefers-reduced-motion:reduce){.tools{animation:none}button{transition:none}}
 
-@media(max-width:680px){.tools{grid-template-columns:1fr}.topbar{align-items:center}#sync-status{display:none}.passkey-panel{align-items:stretch;flex-direction:column}.passkey-panel button{width:100%}}
+@media(max-width:680px){.tools{grid-template-columns:1fr}.brand{letter-spacing:.16em}#sync-status{display:none}.passkey-panel{align-items:stretch;flex-direction:column}.passkey-panel button{width:100%}}
