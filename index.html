@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <title>Steady Strong</title>
-  <link rel="stylesheet" href="./site.css?v=zen-3">
+  <link rel="stylesheet" href="./site.css?v=drinks-1">
 </head>
 <body>
   <header class="topbar">
     <div class="brand">Sanath / steady strong</div>
-    <div class="top-actions"><span id="account-label" hidden></span><span id="sync-status" role="status"></span><button type="button" id="open-tools" class="quiet" aria-expanded="false" aria-controls="tools-panel" hidden>Settings</button><button type="button" id="sign-out" class="quiet" hidden>Sign out</button></div>
+    <div class="top-actions"><span id="account-label" hidden></span><span id="sync-status" role="status"></span><button type="button" id="open-drinks" class="quiet" aria-expanded="false" aria-controls="drinks-panel" hidden>Drinks</button><button type="button" id="open-tools" class="quiet" aria-expanded="false" aria-controls="tools-panel" hidden>Settings</button><button type="button" id="sign-out" class="quiet" hidden>Sign out</button></div>
   </header>
   <main>
     <section id="connection-panel" class="panel" hidden>
@@ -56,6 +56,32 @@
         </div>
         <p id="tool-status" class="status" role="status"></p>
       </div>
+      <div id="drinks-panel" class="drawer drinks" hidden>
+        <form id="drink-form">
+          <div class="drink-row">
+            <span class="drink-label">How many</span>
+            <div class="stepper"><button type="button" id="drink-minus" aria-label="One fewer">−</button><output id="drink-count">1</output><button type="button" id="drink-plus" aria-label="One more">+</button></div>
+          </div>
+          <div class="drink-row">
+            <span class="drink-label">What</span>
+            <div class="chips" id="drink-kinds" role="radiogroup" aria-label="Drink type">
+              <button type="button" role="radio" aria-checked="true">Beer</button><button type="button" role="radio" aria-checked="false">Wine</button><button type="button" role="radio" aria-checked="false">Cocktail</button><button type="button" role="radio" aria-checked="false">Shot</button><button type="button" role="radio" aria-checked="false">Other</button>
+            </div>
+          </div>
+          <div class="drink-row">
+            <label class="drink-label" for="drink-time">When</label>
+            <input id="drink-time" type="datetime-local" required>
+          </div>
+          <button type="submit" class="primary">Log drinks</button>
+        </form>
+        <div class="drink-summary">
+          <div><span>Last 7 days</span><strong id="drinks-week">—</strong></div>
+          <div><span>This month</span><strong id="drinks-month">—</strong></div>
+          <div><span>Dry days (7d)</span><strong id="drinks-free">—</strong></div>
+        </div>
+        <ul id="drink-history" class="drink-history"></ul>
+        <p id="drink-status" class="status" role="status"></p>
+      </div>
       <div id="empty-plan" class="panel empty" hidden>
         <p class="eyebrow">ONE-TIME SETUP</p>
         <h1>Add your private plan.</h1>
@@ -64,6 +90,6 @@
       <iframe id="plan-frame" title="Private training plan" hidden></iframe>
     </section>
   </main>
-  <script type="module" src="./app.js?v=zen-3"></script>
+  <script type="module" src="./app.js?v=drinks-1"></script>
 </body>
 </html>

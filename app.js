@@ -89,6 +89,8 @@ async function renderSession(session) {
     $("sign-out").hidden = true;
     $("open-tools").hidden = true;
     $("tools-panel").hidden = true;
+    $("open-drinks").hidden = true;
+    $("drinks-panel").hidden = true;
     status("sync-status", "");
     document.body.classList.remove("signed-in");
     $("account-label").textContent = "";
@@ -100,6 +102,7 @@ async function renderSession(session) {
   document.body.classList.add("signed-in");
   $("sign-out").hidden = false;
   $("open-tools").hidden = false;
+  $("open-drinks").hidden = false;
   $("account-label").textContent = user.email || "Signed in";
   status("sync-status", "Loading private data…");
   refreshPasskeyStatus().catch((error) => status("passkey-status", error.message, true));
@@ -160,14 +163,144 @@ window.addEventListener("message", (event) => {
   saveState(event.data.state).catch((error) => status("tool-status", error.message, true));
 });
 
-function setToolsOpen(open) {
-  $("tools-panel").hidden = !open;
-  $("open-tools").setAttribute("aria-expanded", String(open));
+// Settings and Drinks are drawers above the pill; only one is open at a time.
+const drawers = { tools: ["open-tools", "tools-panel"], drinks: ["open-drinks", "drinks-panel"] };
+
+function setDrawer(name) {
+  for (const [key, [buttonId, panelId]] of Object.entries(drawers)) {
+    const open = key === name;
+    $(panelId).hidden = !open;
+    $(buttonId).setAttribute("aria-expanded", String(open));
+  }
+  if (name === "drinks") openDrinks();
 }
 
-$("open-tools").addEventListener("click", () => setToolsOpen($("tools-panel").hidden));
+function setToolsOpen(open) {
+  setDrawer(open ? "tools" : null);
+}
+
+$("open-tools").addEventListener("click", () => setDrawer($("tools-panel").hidden ? "tools" : null));
+$("open-drinks").addEventListener("click", () => setDrawer($("drinks-panel").hidden ? "drinks" : null));
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !$("tools-panel").hidden) setToolsOpen(false);
+  if (event.key === "Escape") setDrawer(null);
+});
+
+// Drink log
+let drinkCount = 1;
+
+function localInputValue(date) {
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 16);
+}
+
+function dayKey(date) {
+  return localInputValue(date).slice(0, 10);
+}
+
+function setDrinkCount(n) {
+  drinkCount = Math.min(20, Math.max(0.5, n));
+  $("drink-count").textContent = String(drinkCount);
+}
+
+function selectedKind() {
+  return $("drink-kinds").querySelector('[aria-checked="true"]')?.textContent || "Other";
+}
+
+function openDrinks() {
+  $("drink-time").value = localInputValue(new Date());
+  loadDrinks();
+}
+
+async function loadDrinks() {
+  if (!currentUser) return;
+  const since = new Date();
+  since.setDate(since.getDate() - 35);
+  const { data, error } = await supabase.from("drink_log")
+    .select("id,drank_at,drinks,kind")
+    .gte("drank_at", since.toISOString())
+    .order("drank_at", { ascending: false })
+    .limit(200);
+  if (error) {
+    status("drink-status", error.message, true);
+    return;
+  }
+  renderDrinks(data);
+}
+
+function renderDrinks(rows) {
+  const now = new Date();
+  const weekStart = new Date(now);
+  weekStart.setHours(0, 0, 0, 0);
+  weekStart.setDate(weekStart.getDate() - 6);
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  let week = 0;
+  let month = 0;
+  const drinkDays = new Set();
+  for (const row of rows) {
+    const at = new Date(row.drank_at);
+    const n = Number(row.drinks);
+    if (at >= weekStart) {
+      week += n;
+      drinkDays.add(dayKey(at));
+    }
+    if (at >= monthStart) month += n;
+  }
+  $("drinks-week").textContent = String(week);
+  $("drinks-month").textContent = String(month);
+  $("drinks-free").textContent = (7 - drinkDays.size) + " / 7";
+  const list = $("drink-history");
+  list.innerHTML = "";
+  for (const row of rows.slice(0, 8)) {
+    const item = document.createElement("li");
+    const when = new Date(row.drank_at).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    const text = document.createElement("span");
+    text.textContent = Number(row.drinks) + " × " + row.kind + " · " + when;
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "quiet";
+    remove.textContent = "Remove";
+    remove.setAttribute("aria-label", "Remove " + text.textContent);
+    remove.addEventListener("click", async () => {
+      const { error } = await supabase.from("drink_log").delete().eq("id", row.id);
+      if (error) status("drink-status", error.message, true);
+      else loadDrinks();
+    });
+    item.append(text, remove);
+    list.append(item);
+  }
+  if (!rows.length) {
+    const empty = document.createElement("li");
+    empty.className = "drink-empty";
+    empty.textContent = "Nothing logged yet.";
+    list.append(empty);
+  }
+}
+
+$("drink-minus").addEventListener("click", () => setDrinkCount(drinkCount - (drinkCount <= 1 ? 0.5 : 1)));
+$("drink-plus").addEventListener("click", () => setDrinkCount(drinkCount < 1 ? 1 : drinkCount + 1));
+$("drink-kinds").addEventListener("click", (event) => {
+  const chip = event.target.closest("[role=radio]");
+  if (!chip) return;
+  for (const other of $("drink-kinds").children) other.setAttribute("aria-checked", String(other === chip));
+});
+
+$("drink-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!currentUser) return;
+  const when = new Date($("drink-time").value);
+  if (Number.isNaN(when.getTime())) {
+    status("drink-status", "Pick a valid time.", true);
+    return;
+  }
+  const { error } = await supabase.from("drink_log").insert({ drinks: drinkCount, kind: selectedKind(), drank_at: when.toISOString() });
+  if (error) {
+    status("drink-status", error.message, true);
+    return;
+  }
+  status("drink-status", "Logged " + drinkCount + " × " + selectedKind() + ".");
+  setDrinkCount(1);
+  $("drink-time").value = localInputValue(new Date());
+  loadDrinks();
 });
 
 $("passkey-sign-in").addEventListener("click", async () => {
