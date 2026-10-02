@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <title>Steady Strong</title>
-  <link rel="stylesheet" href="./site.css?v=drinks-1">
+  <link rel="stylesheet" href="./site.css?v=checkins-1">
 </head>
 <body>
   <header class="topbar">
     <div class="brand">Sanath / steady strong</div>
-    <div class="top-actions"><span id="account-label" hidden></span><span id="sync-status" role="status"></span><button type="button" id="open-drinks" class="quiet" aria-expanded="false" aria-controls="drinks-panel" hidden>Drinks</button><button type="button" id="open-tools" class="quiet" aria-expanded="false" aria-controls="tools-panel" hidden>Settings</button><button type="button" id="sign-out" class="quiet" hidden>Sign out</button></div>
+    <div class="top-actions"><span id="account-label" hidden></span><span id="sync-status" role="status"></span><button type="button" id="open-checkins" class="quiet" aria-expanded="false" aria-controls="checkins-panel" hidden>Check-ins</button><button type="button" id="open-drinks" class="quiet" aria-expanded="false" aria-controls="drinks-panel" hidden>Drinks</button><button type="button" id="open-tools" class="quiet" aria-expanded="false" aria-controls="tools-panel" hidden>Settings</button><button type="button" id="sign-out" class="quiet" hidden>Sign out</button></div>
   </header>
   <main>
     <section id="connection-panel" class="panel" hidden>
@@ -82,6 +82,12 @@
         <ul id="drink-history" class="drink-history"></ul>
         <p id="drink-status" class="status" role="status"></p>
       </div>
+      <div id="checkins-panel" class="drawer checkins" hidden>
+        <div class="checkins-heading"><div><p class="eyebrow">AGENT JOURNAL</p><h2>Daily check-ins</h2></div><button type="button" id="refresh-checkins" class="quiet">Refresh</button></div>
+        <p class="checkins-note">Entries submitted through the public agent inbox are unverified.</p>
+        <ul id="checkin-history" class="checkin-history"></ul>
+        <p id="checkin-status" class="status" role="status"></p>
+      </div>
       <div id="empty-plan" class="panel empty" hidden>
         <p class="eyebrow">ONE-TIME SETUP</p>
         <h1>Add your private plan.</h1>
@@ -90,6 +96,6 @@
       <iframe id="plan-frame" title="Private training plan" hidden></iframe>
     </section>
   </main>
-  <script type="module" src="./app.js?v=drinks-1"></script>
+  <script type="module" src="./app.js?v=checkins-1"></script>
 </body>
 </html>

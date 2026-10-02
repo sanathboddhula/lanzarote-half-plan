@@ -91,6 +91,10 @@ async function renderSession(session) {
     $("tools-panel").hidden = true;
     $("open-drinks").hidden = true;
     $("drinks-panel").hidden = true;
+    $("open-checkins").hidden = true;
+    $("checkins-panel").hidden = true;
+    $("checkin-history").replaceChildren();
+    status("checkin-status", "");
     status("sync-status", "");
     document.body.classList.remove("signed-in");
     $("account-label").textContent = "";
@@ -103,6 +107,7 @@ async function renderSession(session) {
   $("sign-out").hidden = false;
   $("open-tools").hidden = false;
   $("open-drinks").hidden = false;
+  $("open-checkins").hidden = false;
   $("account-label").textContent = user.email || "Signed in";
   status("sync-status", "Loading private data…");
   refreshPasskeyStatus().catch((error) => status("passkey-status", error.message, true));
@@ -163,8 +168,8 @@ window.addEventListener("message", (event) => {
   saveState(event.data.state).catch((error) => status("tool-status", error.message, true));
 });
 
-// Settings and Drinks are drawers above the pill; only one is open at a time.
-const drawers = { tools: ["open-tools", "tools-panel"], drinks: ["open-drinks", "drinks-panel"] };
+// Drawers sit above the pill; only one is open at a time.
+const drawers = { tools: ["open-tools", "tools-panel"], drinks: ["open-drinks", "drinks-panel"], checkins: ["open-checkins", "checkins-panel"] };
 
 function setDrawer(name) {
   for (const [key, [buttonId, panelId]] of Object.entries(drawers)) {
@@ -173,6 +178,7 @@ function setDrawer(name) {
     $(buttonId).setAttribute("aria-expanded", String(open));
   }
   if (name === "drinks") openDrinks();
+  if (name === "checkins") loadCheckins();
 }
 
 function setToolsOpen(open) {
@@ -181,9 +187,57 @@ function setToolsOpen(open) {
 
 $("open-tools").addEventListener("click", () => setDrawer($("tools-panel").hidden ? "tools" : null));
 $("open-drinks").addEventListener("click", () => setDrawer($("drinks-panel").hidden ? "drinks" : null));
+$("open-checkins").addEventListener("click", () => setDrawer($("checkins-panel").hidden ? "checkins" : null));
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") setDrawer(null);
 });
+
+async function loadCheckins() {
+  if (!currentUser) return;
+  const userId = currentUser.id;
+  status("checkin-status", "Loading check-ins…");
+  const { data, error } = await supabase.from("agent_checkins")
+    .select("id,checkin_date,body,created_at")
+    .order("checkin_date", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(100);
+  if (currentUser?.id !== userId) return;
+  if (error) {
+    status("checkin-status", error.message, true);
+    return;
+  }
+  const list = $("checkin-history");
+  list.replaceChildren();
+  for (const row of data) {
+    const item = document.createElement("li");
+    const content = document.createElement("div");
+    const date = document.createElement("strong");
+    date.textContent = new Date(row.checkin_date + "T12:00:00").toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+    const note = document.createElement("p");
+    note.textContent = row.body;
+    content.append(date, note);
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "quiet";
+    remove.textContent = "Remove";
+    remove.setAttribute("aria-label", "Remove check-in from " + date.textContent);
+    remove.addEventListener("click", async () => {
+      const { error: deleteError } = await supabase.from("agent_checkins").delete().eq("id", row.id);
+      if (deleteError) status("checkin-status", deleteError.message, true);
+      else loadCheckins();
+    });
+    item.append(content, remove);
+    list.append(item);
+  }
+  if (!data.length) {
+    const empty = document.createElement("li");
+    empty.textContent = "No agent check-ins yet.";
+    list.append(empty);
+  }
+  status("checkin-status", data.length === 100 ? "Showing the latest 100 check-ins." : "");
+}
+
+$("refresh-checkins").addEventListener("click", loadCheckins);
 
 // Drink log
 let drinkCount = 1;

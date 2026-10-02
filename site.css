@@ -92,7 +92,20 @@ form input{width:100%;padding:13px 16px;border:1px solid var(--line);border-radi
 .drinks>.status:empty{display:none}
 .drinks>.status{margin:0}
 
+/* Private view of the public agent inbox */
+.checkins{position:fixed;right:16px;bottom:68px;z-index:20;width:min(440px,calc(100% - 32px));max-height:calc(100dvh - 92px);overflow:auto;padding:20px;display:grid;gap:12px;border:1px solid var(--line);border-radius:18px;background:rgba(16,26,22,.97);box-shadow:0 22px 70px rgba(0,0,0,.45);animation:settle .25s ease-out}
+.checkins-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.checkins-heading h2{margin:3px 0 0;font:600 22px/1.2 var(--font);letter-spacing:-.04em}
+.checkins-note{margin:0;color:var(--muted);font-size:12px}
+.checkin-history{list-style:none;margin:0;padding:0;display:grid}
+.checkin-history li{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+.checkin-history li>div{min-width:0}
+.checkin-history strong{font-size:13px;color:var(--sea)}
+.checkin-history p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.5}
+.checkins>.status{margin:0}
+.checkins>.status:empty{display:none}
+
 @keyframes settle{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.tools,.drinks{animation:none}button{transition:none}}
+@media(prefers-reduced-motion:reduce){.tools,.drinks,.checkins{animation:none}button{transition:none}}
 
 @media(max-width:680px){.tools{grid-template-columns:1fr}.brand{letter-spacing:.16em}.signed-in #sync-status{display:none}.passkey-panel{align-items:flex-start;flex-direction:column}}
