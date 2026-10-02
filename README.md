@@ -25,6 +25,26 @@ The Strong and Strava CSV importers in the plan still process raw files in the b
 
 - `private_plan_html`: one authenticated owner's full personalized dashboard HTML.
 - `training_state`: checkoffs, profile/baseline, illness return date, and Strong summary.
+- `agent_checkins`: short, unverified daily notes submitted through a public insert-only inbox and read by the signed-in owner.
 - `training-exports`: private original CSV backups in Supabase Storage.
 
-Each table has owner-only select, insert, and update policies. Unauthenticated visitors cannot read either table.
+The plan and state tables have owner-only read/write policies. Unauthenticated visitors cannot read any private table. The separate `agent_checkins` table grants anonymous callers only `INSERT` on `checkin_date` and `body`; the signed-in owner can read and remove entries. The database assigns each entry to the sole user with a private plan. Inserts fail if there is no plan owner or more than one.
+
+## External agent check-ins
+
+The live Supabase project applied [`20261002000000_agent_checkins.sql`](supabase/migrations/20261002000000_agent_checkins.sql) on October 2, 2026. Apply it before publishing this frontend in any other project. Give the agent this request format; the publishable key is already public in [`config.js`](config.js), so no owner session or service-role key needs to be shared:
+
+```http
+POST https://ywfunoilcmukceknkwtx.supabase.co/rest/v1/agent_checkins
+apikey: <publishable key from config.js>
+Content-Type: application/json
+Prefer: return=minimal
+
+{"checkin_date":"2026-10-02","body":"Easy run completed. Legs felt good; no pain."}
+```
+
+A successful insert returns HTTP 201 with no row body. The agent can submit one note per day, or multiple notes for the same date; it cannot read, update, or delete them. The signed-in site shows the latest 100 under **Check-ins**. It renders notes as text, not HTML.
+
+This endpoint has no caller authentication. Anyone who knows the public site can submit forged notes or spam the inbox. Treat entries as unverified, and remove unwanted ones from the Check-ins drawer. If that exposure is unacceptable, use an authenticated Edge Function with a dedicated token provisioned outside chat instead.
+
+The live project also has an older owner-only migration that is intentionally absent from this public repository because it contains personal owner details. For future CLI pushes, fetch remote migration history into a private working directory and leave that file out of Git.
